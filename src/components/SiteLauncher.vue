@@ -8,7 +8,7 @@ import SudokuIcon from '../assets/icons/sudoku.svg?raw'
 import VocabIcon from '../assets/icons/vocab.svg?raw'
 import FlashcardsIcon from '../assets/icons/flashcards.svg?raw'
 import GitHubIcon from '../assets/icons/github.svg?raw'
-import LinkedInIcon from '../assets/icons/linkedin.svg?raw'
+import LinkedInIcon from '../assets/icons/lkdin.svg?raw'
 
 const props = defineProps<{ linkItems: LinkItem[] }>()
 
