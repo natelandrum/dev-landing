@@ -69,7 +69,7 @@ function onAfterEnter(el: Element) {
   <!-- ─── Mobile: top bar, expands downward (hidden at md+) ─── -->
   <nav
     ref="mobileEl"
-    class="fixed z-50 md:hidden bg-(--sidebar-bg) border-b border-(--border) left-0 right-0 top-0 transition-[max-height] duration-300 ease-out"
+    class="fixed z-50 md:hidden bg-(--sidebar-bg) border-b border-(--border) left-0 right-0 top-0 transition-[max-height] duration-300 ease-out overflow-auto"
     :class="isExpanded ? 'max-h-dvh' : 'max-h-16'"
   >
     <button
@@ -128,7 +128,7 @@ function onAfterEnter(el: Element) {
   <!-- ─── Desktop: left rail, expands width (hidden below md) ─── -->
   <nav
     ref="desktopEl"
-    class="hidden md:flex max-h-screen fixed z-50 flex-col bg-(--sidebar-bg) border-r border-(--border) left-0 top-0 bottom-0 transition-[width] duration-300 ease-out"
+    class="hidden md:flex max-h-screen fixed z-50 flex-col bg-(--sidebar-bg) border-r border-(--border) left-0 top-0 bottom-0 transition-[width] duration-300 ease-out overflow-auto"
     :class="isExpanded ? 'w-64' : 'w-22'"
   >
     <button
