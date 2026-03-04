@@ -4,6 +4,8 @@ export type LinkKey =
   | 'sudoku'
   | 'flashcardsExtension'
   | 'flashcardsPage'
+  | 'github'
+  | 'linkedIn'
 
 export type LinkItem = {
   key: LinkKey
@@ -43,6 +45,18 @@ export const LINKS: LinkItem[] = [
     label: 'Flashcards Page',
     description: 'A web app for reviewing vocabulary extracted from Duolingo.',
     href: 'https://flashcards.nlandrum.dev/',
+  },
+  {
+    key: 'github',
+    label: 'GitHub',
+    description: 'My GitHub profile with repositories and contributions.',
+    href: 'https://github.com/natelandrum',
+  },
+  {
+    key: 'linkedIn',
+    label: 'LinkedIn',
+    description: 'My LinkedIn profile with professional experience and connections.',
+    href: 'https://www.linkedin.com/in/nathan-landrum-dev/',
   },
 ]
 

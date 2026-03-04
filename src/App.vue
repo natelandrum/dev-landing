@@ -3,7 +3,7 @@
   <main
     class="pt-20 md:pt-6.5 md:pl-20 md:ml-4 max-w-300 xl:mx-auto py-6.5 px-4 pb-10.5 grid gap-4 relative z-10"
   >
-    <IdentityBar @toggleTheme="toggleTheme" />
+    <IdentityBar />
 
     <TerminalPane
       ref="terminalRef"
@@ -99,7 +99,7 @@ async function openLink(key: LinkKey) {
   pushLine(item.href)
 
   await sleep(330)
-  window.location.assign(item.href)
+  window.open(item.href, '_blank')
 }
 
 async function runCommand(raw: string) {
@@ -155,17 +155,13 @@ async function runCommand(raw: string) {
     }
     case 'launcher':
       launcherRef.value?.toggle()
-      typeLine('Toggled launcher.')
+      typeLine('Toggled launcher')
       break
 
     default:
       pushLine(`Unknown command: ${head} (try 'help')`, 'warn')
       break
   }
-}
-
-function toggleTheme() {
-  document.documentElement.classList.toggle('light')
 }
 
 function sleep(ms: number) {

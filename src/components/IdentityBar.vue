@@ -17,21 +17,12 @@
         online
       </div>
       <div class="font-mono text-[16px] opacity-80">{{ time }}</div>
-      <button
-        class="border border-(--border) bg-(--hover-overlay)] rounded-[10px] px-2.5 py-1.5 text-inherit cursor-pointer hover:border-(--accent-primary)/40"
-        type="button"
-        @click="$emit('toggleTheme')"
-      >
-        ◐
-      </button>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-
-defineEmits<{ (e: 'toggleTheme'): void }>()
 
 const time = ref('')
 let timer: number | undefined
