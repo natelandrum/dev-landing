@@ -56,12 +56,12 @@ function getIcon(key: LinkKey) {
 const visibleItems = computed(() => (isExpanded.value ? props.linkItems : []))
 
 function onBeforeEnter(el: Element) {
-  const i = parseInt((el as HTMLElement).dataset.index ?? '0')
-  ;(el as HTMLElement).style.transitionDelay = `${i * 55}ms`
+  const i = parseInt((el as HTMLElement).dataset.index ?? '0');
+  (el as HTMLElement).style.transitionDelay = `${i * 55}ms`
 }
 
 function onAfterEnter(el: Element) {
-  ;(el as HTMLElement).style.transitionDelay = ''
+  (el as HTMLElement).style.transitionDelay = ''
 }
 </script>
 
@@ -69,8 +69,8 @@ function onAfterEnter(el: Element) {
   <!-- ─── Mobile: top bar, expands downward (hidden at md+) ─── -->
   <nav
     ref="mobileEl"
-    class="fixed z-50 md:hidden bg-(--sidebar-bg) border-b border-(--border) left-0 right-0 top-0 transition-[max-height] duration-300 ease-out overflow-auto"
-    :class="isExpanded ? 'max-h-dvh' : 'max-h-16'"
+    class="fixed z-50 md:hidden bg-(--sidebar-bg) border-b border-(--border) left-0 right-0 top-0 transition-[max-height] duration-300 ease-out overflow-hidden"
+    :class="isExpanded ? 'max-h-dvh overflow-y-auto' : 'max-h-16'"
   >
     <button
       @click="toggle()"
@@ -128,7 +128,7 @@ function onAfterEnter(el: Element) {
   <!-- ─── Desktop: left rail, expands width (hidden below md) ─── -->
   <nav
     ref="desktopEl"
-    class="hidden md:flex max-h-screen fixed z-50 flex-col bg-(--sidebar-bg) border-r border-(--border) left-0 top-0 bottom-0 transition-[width] duration-300 ease-out overflow-auto"
+    class="hidden md:flex max-h-screen fixed z-50 flex-col bg-(--sidebar-bg) border-r border-(--border) left-0 top-0 bottom-0 transition-[width] duration-300 ease-out overflow-y-auto overflow-x-hidden"
     :class="isExpanded ? 'w-64' : 'w-22'"
   >
     <button

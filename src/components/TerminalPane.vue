@@ -47,6 +47,7 @@
           input || (isTyping ? '' : 'type a command…')
         }}</span>
         <input
+          id="terminalInput"
           ref="inputEl"
           class="w-full bg-transparent border-0 outline-none text-(--text) caret-(--accent-primary) font-inherit p-0"
           :disabled="isTyping"

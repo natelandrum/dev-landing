@@ -84,11 +84,10 @@ function onGlobalKeydown(e: KeyboardEvent) {
 }
 
 async function prefetchLink(key: LinkKey) {
-  if (!key.includes('extension')) {
-    const item = getLink(key)
-    preconnectTo(item.href)
-    void prefetch(item.href)
-  }
+  if (key === 'flashcardsExtension' || key === 'linkedIn') return
+  const item = getLink(key)
+  preconnectTo(item.href)
+  void prefetch(item.href)
 }
 
 async function openLink(key: LinkKey) {
