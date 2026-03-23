@@ -20,6 +20,8 @@ defineEmits<{
 const isExpanded = ref(false)
 const mobileEl = ref<HTMLElement | null>(null)
 const desktopEl = ref<HTMLElement | null>(null)
+const hoveredItem = ref<LinkKey | null>(null)
+const tooltipStyle = ref({ top: '0px', left: '0px' })
 
 function toggle() {
   isExpanded.value = !isExpanded.value
@@ -32,6 +34,19 @@ function handleClickOutside(event: MouseEvent) {
   if (isExpanded.value && outsideMobile && outsideDesktop) {
     isExpanded.value = false
   }
+}
+
+function showTooltip(event: MouseEvent | FocusEvent, key: LinkKey) {
+  hoveredItem.value = key
+  const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  tooltipStyle.value = {
+    top: `${rect.top + rect.height / 2}px`,
+    left: `${rect.right + 12}px`,
+  }
+}
+
+function hideTooltip() {
+  hoveredItem.value = null
 }
 
 onMounted(() => document.addEventListener('click', handleClickOutside))
@@ -110,7 +125,7 @@ function onAfterEnter(el: Element) {
           @focus="$emit('prefetch', item.key)"
           @keydown.enter="$emit('open', item.key)"
           @click="$emit('open', item.key)"
-          class="w-full flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer bg-(--sidebar-item) border border-(--border) transition-all duration-200 hover:bg-(--sidebar-item-hover) hover:border-(--accent-primary)/50 hover:shadow-[0_0_15px_var(--shadow-glow)]"
+          class="relative w-full flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer bg-(--sidebar-item) border border-(--border) transition-all duration-200 hover:bg-(--sidebar-item-hover) hover:shadow-[0_0_15px_var(--shadow-glow)]"
         >
           <div
             class="w-8 h-8 shrink-0 flex items-center justify-center text-(--accent-primary)"
@@ -167,9 +182,12 @@ function onAfterEnter(el: Element) {
           v-for="item in props.linkItems"
           :key="item.key"
           type="button"
-          @mouseenter="$emit('prefetch', item.key)"
+          @mouseenter="(e) => { $emit('prefetch', item.key); showTooltip(e, item.key) }"
+          @mouseleave="hideTooltip"
+          @focus="(e) => { $emit('prefetch', item.key); showTooltip(e, item.key) }"
+          @blur="hideTooltip"
           @click="$emit('open', item.key)"
-          class="group relative w-full flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer bg-(--sidebar-item) border border-(--border) transition-all duration-200 hover:bg-(--sidebar-item-hover) hover:border-(--accent-primary)/50 hover:shadow-[0_0_15px_var(--shadow-glow)]"
+          class="relative w-full flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer bg-(--sidebar-item) border border-(--border) transition-all duration-200 hover:bg-(--sidebar-item-hover) hover:shadow-[0_0_15px_var(--shadow-glow)]"
           :class="isExpanded ? 'justify-start' : 'justify-start md:justify-center'"
         >
           <div
@@ -185,21 +203,64 @@ function onAfterEnter(el: Element) {
             <div class="text-sm font-semibold text-(--text) mb-1 truncate">{{ item.label }}</div>
             <div class="text-xs text-(--text-secondary) line-clamp-2">{{ item.description }}</div>
           </div>
-
-          <!-- Tooltip: only when sidebar is collapsed -->
-          <span
-            v-if="!isExpanded"
-            class="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-(--sidebar-bg) border border-(--border) text-md font-medium text-(--text) whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none z-50 shadow-md"
-          >
-            {{ item.label }}
-          </span>
         </button>
       </TransitionGroup>
     </div>
   </nav>
+
+  <Teleport to="body">
+    <span
+      v-if="hoveredItem !== null && !isExpanded"
+      class="fixed -translate-y-1/2 px-2.5 py-1.5 rounded-lg border text-lg font-medium whitespace-nowrap pointer-events-none shadow-md"
+      style="background: var(--sidebar-bg); border-color: var(--border); color: var(--text); z-index: 9999"
+      :style="{ top: tooltipStyle.top, left: tooltipStyle.left }"
+    >
+      {{ props.linkItems.find(i => i.key === hoveredItem)?.label }}
+    </span>
+  </Teleport>
 </template>
 
 <style scoped>
+@property --spin-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes spin-border {
+  to {
+    --spin-angle: 360deg;
+  }
+}
+
+button[type='button']::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: calc(0.75rem + 2px);
+  background: conic-gradient(
+    from var(--spin-angle),
+    transparent 55%,
+    color-mix(in srgb, var(--accent-primary) 20%, transparent) 70%,
+    var(--accent-primary) 87%,
+    transparent 93%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+button[type='button']:hover::before {
+  opacity: 1;
+  animation: spin-border 1.5s linear infinite;
+}
+
 /* Mobile TransitionGroup: items slide up from below and fade in */
 .mobile-item-enter-active,
 .mobile-item-leave-active {
